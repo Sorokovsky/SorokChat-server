@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { FilesModule } from './core/files/files.module';
+import { TokensModule } from './core/tokens/tokens.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -11,7 +12,8 @@ import { FilesModule } from './core/files/files.module';
     }),
     ConfigModule.forRoot({isGlobal: true}),
     PrismaModule,
-    FilesModule
+    FilesModule,
+    TokensModule
   ],
 })
 export class AppModule {}
