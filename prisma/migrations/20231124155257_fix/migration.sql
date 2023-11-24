@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "surname" SET DEFAULT '',
+ALTER COLUMN "name" SET DEFAULT '';

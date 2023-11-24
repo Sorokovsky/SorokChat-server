@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int              @id @unique @default(autoincrement())
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  email          String           @unique
+  surname        String           @default("")
+  name           String           @default("")
+  password       String
+  avatarPath     String           @map("avatar_path")
+  channels       Channel[]
+  messages       Message[]
+  adminToChannel AdminToChannel[]
+}
+
+model AdminToChannel {
+  id        Int      @id @unique @default(autoincrement())
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  admin     User     @relation(fields: [userId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  userId    Int
+  channelId Int
+}
+
+model Channel {
+  id             Int              @id @unique @default(autoincrement())
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  members        User[]
+  messages       Message[]
+  name           String
+  description    String           @default("")
+  AdminToChannel AdminToChannel[]
+}
+
+model Message {
+  id        Int      @id @unique @default(autoincrement())
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  author    User     @relation(fields: [userId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  text      String
+  userId    Int
+  channelId Int
+}
