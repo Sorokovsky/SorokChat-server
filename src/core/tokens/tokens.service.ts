@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokensDto } from 'models/tokens/tokens.dto';
 import { UserPayload } from 'models/tokens/user-payload';
@@ -18,5 +18,13 @@ export class TokensService {
     async getRefreshToken(payload: UserPayload): Promise<string> {
         const refreshToken: string = await this.jwt.signAsync(payload, {expiresIn: 1000 * 60 * 60 * 24 * 7});
         return refreshToken;
+    }
+    async verify(token: string): Promise<UserPayload> {
+        try {
+            return await this.jwt.verifyAsync<UserPayload>(token);
+        } catch (error) {
+            throw new BadRequestException(error.message);
+            
+        }
     }
 }
